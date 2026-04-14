@@ -3,271 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Bcrypt Hash & Verifier</title>
-    <!-- Memuat library bcryptjs dari CDN -->
+    <title>Bcrypt Premium Generator & Validator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f5f6fa;
-            --text-color: #2c3e50;
-            --success-color: #2ecc71;
-            --error-color: #e74c3c;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
             min-height: 100vh;
         }
-
-        .container {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--primary-color);
-        }
-
-        .section {
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .section:last-child {
-            border-bottom: none;
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box; /* Penting agar padding tidak merusak lebar */
-            font-family: monospace;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #357abd;
-        }
-
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .result-box {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            word-break: break-all;
-            position: relative;
-        }
-
-        .status-msg {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-
-        .success {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #27ae60;
-            border: 1px solid var(--success-color);
-        }
-
-        .error {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #c0392b;
-            border: 1px solid var(--error-color);
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            padding: 2px 8px;
-            font-size: 12px;
-            width: auto;
-            margin: 0;
-            background-color: #95a5a6;
-        }
-        
-        .copy-btn:hover {
-            background-color: #7f8c8d;
+        .premium-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         }
     </style>
 </head>
-<body>
+<body class="text-slate-200 p-4 md:p-8">
 
-<div class="container">
-    <h1>🔐 Bcrypt Tool</h1>
-    <p style="text-align: center; color: #666; font-size: 0.9em;">
-        Enkripsi dan Verifikasi Password Aman di Browser
-    </p>
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold tracking-tight mb-2">
+                <span class="text-transparent bg-clip-text premium-gradient">Bcrypt</span> Premium
+            </h1>
+            <p class="text-slate-400">Generator hash keamanan tinggi & validator password instan.</p>
+        </header>
 
-    <!-- BAGIAN 1: GENERATE HASH -->
-    <div class="section">
-        <h2>1. Buat Hash (Enkripsi)</h2>
-        
-        <label for="passwordToHash">Password Asli:</label>
-        <input type="text" id="passwordToHash" placeholder="Masukkan password...">
-        
-        <label for="saltRounds">Salt Rounds (Biaya Komputasi): <span id="saltValueDisplay">10</span></label>
-        <input type="range" id="saltRounds" min="4" max="15" value="10" oninput="document.getElementById('saltValueDisplay').innerText = this.value">
-        <p style="font-size: 0.8em; color: #888;">Semakin tinggi angka, semakin aman tapi semakin lama prosesnya.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Section: Generator -->
+            <div class="glass-card rounded-2xl p-6 shadow-2xl">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 rounded-lg premium-gradient mr-4">
+                        <i class="fas fa-lock text-white"></i>
+                    </div>
+                    <h2 class="text-xl font-semibold text-white">Generate Hash</h2>
+                </div>
 
-        <button id="btnGenerate" onclick="generateHash()">Generate Hash</button>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Plain Text / Password</label>
+                        <input type="text" id="genInput" placeholder="Masukkan teks..." 
+                               class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                    </div>
 
-        <label for="hashOutput">Hasil Hash:</label>
-        <div class="result-box">
-            <textarea id="hashOutput" rows="3" readonly placeholder="Hash akan muncul di sini..."></textarea>
-            <button class="copy-btn" onclick="copyToClipboard('hashOutput')">Salin</button>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1 flex justify-between">
+                            <span>Cost Factor (Rounds)</span>
+                            <span id="costVal" class="text-purple-400 font-bold">10</span>
+                        </label>
+                        <input type="range" id="costRange" min="4" max="15" value="10" 
+                               class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500">
+                        <p class="text-[10px] text-slate-500 mt-1 italic">Semakin tinggi semakin aman, tapi lebih lambat.</p>
+                    </div>
+
+                    <button onclick="generateBcrypt()" 
+                            class="w-full premium-gradient hover:opacity-90 text-white font-bold py-3 rounded-lg shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-cog"></i> Generate Hash
+                    </button>
+
+                    <div id="genResultBox" class="hidden">
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Hasil Hash</label>
+                        <div class="relative">
+                            <textarea id="genResult" readonly 
+                                      class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm font-mono text-green-400 focus:outline-none resize-none h-24"></textarea>
+                            <button onclick="copyToClipboard('genResult')" 
+                                    class="absolute top-2 right-2 p-2 bg-slate-800 hover:bg-slate-700 rounded text-slate-300 transition-colors">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Validator -->
+            <div class="glass-card rounded-2xl p-6 shadow-2xl">
+                <div class="flex items-center mb-6">
+                    <div class="p-3 rounded-lg bg-emerald-500 mr-4">
+                        <i class="fas fa-shield-check text-white text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-semibold text-white">Validasi Hash</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Plain Text</label>
+                        <input type="text" id="valInput" placeholder="Masukkan teks asli..." 
+                               class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Bcrypt Hash</label>
+                        <textarea id="valHash" placeholder="Paste hash di sini ($2a$...)" 
+                                  class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all h-20 resize-none font-mono text-sm"></textarea>
+                    </div>
+
+                    <button onclick="validateBcrypt()" 
+                            class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fas fa-vial"></i> Verifikasi
+                    </button>
+
+                    <div id="valResult" class="hidden rounded-lg p-4 text-center font-bold">
+                        <!-- Content via JS -->
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Footer Info -->
+        <footer class="mt-12 text-center text-slate-500 text-sm">
+            <p>© 2024 Bcrypt Premium Generator. <br class="md:hidden"> Diproses secara lokal di browser Anda untuk privasi maksimal.</p>
+        </footer>
     </div>
 
-    <!-- BAGIAN 2: VERIFY PASSWORD -->
-    <div class="section">
-        <h2>2. Verifikasi Password</h2>
-        
-        <label for="verifyPassword">Password Asli (Untuk Dicek):</label>
-        <input type="text" id="verifyPassword" placeholder="Masukkan password...">
-        
-        <label for="verifyHash">Hash yang Tersimpan:</label>
-        <textarea id="verifyHash" rows="3" placeholder="Tempel hash yang ingin dicek di sini..."></textarea>
-
-        <button id="btnVerify" onclick="verifyPassword()">Verifikasi</button>
-
-        <div id="verifyResult" class="status-msg"></div>
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-6 py-3 rounded-xl shadow-2xl border border-slate-700 transform translate-y-20 transition-transform duration-300 flex items-center gap-3">
+        <i class="fas fa-check-circle text-green-400"></i>
+        <span id="toastMsg">Tersalin!</span>
     </div>
-</div>
 
-<script>
-    // Fungsi untuk Generate Hash
-    function generateHash() {
-        const password = document.getElementById('passwordToHash').value;
-        const saltRounds = parseInt(document.getElementById('saltRounds').value);
-        const btn = document.getElementById('btnGenerate');
-        const output = document.getElementById('hashOutput');
+    <script>
+        const bcrypt = dcodeIO.bcrypt;
 
-        if (!password) {
-            alert("Silakan masukkan password terlebih dahulu!");
-            return;
-        }
+        // Update UI range
+        document.getElementById('costRange').addEventListener('input', (e) => {
+            document.getElementById('costVal').innerText = e.target.value;
+        });
 
-        // UI Feedback: Disable tombol dan ubah teks
-        btn.disabled = true;
-        btn.textContent = "Sedang Memproses...";
-        output.value = "";
-
-        // Melakukan Hashing (Asynchronous)
-        bcrypt.hash(password, saltRounds, function(err, hash) {
-            // Kembalikan state tombol
-            btn.disabled = false;
-            btn.textContent = "Generate Hash";
-
-            if (err) {
-                console.error(err);
-                output.value = "Terjadi kesalahan saat enkripsi.";
+        async function generateBcrypt() {
+            const input = document.getElementById('genInput').value;
+            const cost = parseInt(document.getElementById('costRange').value);
+            
+            if (!input) {
+                showToast("Masukkan teks terlebih dahulu!", "error");
                 return;
             }
 
-            // Tampilkan hasil
-            output.value = hash;
-        });
-    }
-
-    // Fungsi untuk Verifikasi Password
-    function verifyPassword() {
-        const password = document.getElementById('verifyPassword').value;
-        const hash = document.getElementById('verifyHash').value;
-        const resultDiv = document.getElementById('verifyResult');
-        const btn = document.getElementById('btnVerify');
-
-        if (!password || !hash) {
-            alert("Harap isi password dan hash!");
-            return;
+            try {
+                const salt = bcrypt.genSaltSync(cost);
+                const hash = bcrypt.hashSync(input, salt);
+                
+                document.getElementById('genResult').value = hash;
+                document.getElementById('genResultBox').classList.remove('hidden');
+                showToast("Hash berhasil dibuat!");
+            } catch (err) {
+                showToast("Terjadi kesalahan teknis.", "error");
+            }
         }
 
-        // UI Feedback
-        btn.disabled = true;
-        btn.textContent = "Mengecek...";
-        resultDiv.style.display = "none";
+        async function validateBcrypt() {
+            const plain = document.getElementById('valInput').value;
+            const hash = document.getElementById('valHash').value;
+            const resDiv = document.getElementById('valResult');
 
-        // Melakukan Verifikasi (Asynchronous)
-        bcrypt.compare(password, hash, function(err, result) {
-            btn.disabled = false;
-            btn.textContent = "Verifikasi";
-
-            if (err) {
-                console.error(err);
-                resultDiv.textContent = "Terjadi kesalahan saat verifikasi.";
-                resultDiv.className = "status-msg error";
-                resultDiv.style.display = "block";
+            if (!plain || !hash) {
+                showToast("Lengkapi kedua kolom!", "error");
                 return;
             }
 
-            // Tampilkan hasil
-            resultDiv.style.display = "block";
-            if (result) {
-                resultDiv.textContent = "✅ Password MATCH (Cocok)!";
-                resultDiv.className = "status-msg success";
-            } else {
-                resultDiv.textContent = "❌ Password TIDAK COCOK!";
-                resultDiv.className = "status-msg error";
-            }
-        });
-    }
+            resDiv.classList.remove('hidden');
+            resDiv.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memproses...';
+            resDiv.className = "rounded-lg p-4 text-center font-bold bg-slate-800 text-slate-300 mt-4";
 
-    // Fungsi Bantuan: Salin ke Clipboard
-    function copyToClipboard(elementId) {
-        const copyText = document.getElementById(elementId);
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // Untuk mobile
-        navigator.clipboard.writeText(copyText.value).then(() => {
-            alert("Hash berhasil disalin!");
-        });
-    }
-</script>
+            // Delay sedikit untuk memberi kesan proses "premium"
+            setTimeout(() => {
+                try {
+                    const isValid = bcrypt.compareSync(plain, hash);
+                    
+                    if (isValid) {
+                        resDiv.innerHTML = '<i class="fas fa-check-circle mr-2"></i> MATCH! Password Valid.';
+                        resDiv.className = "rounded-lg p-4 text-center font-bold bg-emerald-900/40 text-emerald-400 border border-emerald-500 mt-4";
+                    } else {
+                        resDiv.innerHTML = '<i class="fas fa-times-circle mr-2"></i> FAILED! Hash Tidak Cocok.';
+                        resDiv.className = "rounded-lg p-4 text-center font-bold bg-red-900/40 text-red-400 border border-red-500 mt-4";
+                    }
+                } catch (err) {
+                    resDiv.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i> Hash tidak valid (Format Salah).';
+                    resDiv.className = "rounded-lg p-4 text-center font-bold bg-orange-900/40 text-orange-400 border border-orange-500 mt-4";
+                }
+            }, 600);
+        }
 
+        function copyToClipboard(elementId) {
+            const copyText = document.getElementById(elementId);
+            copyText.select();
+            document.execCommand("copy");
+            showToast("Hash disalin ke clipboard!");
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMsg');
+            
+            msgEl.innerText = msg;
+            toast.style.transform = "translateY(0)";
+            
+            setTimeout(() => {
+                toast.style.transform = "translateY(100px)";
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
